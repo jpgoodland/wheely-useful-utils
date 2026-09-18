@@ -51,7 +51,7 @@ name: 'Terraform Infrastructure'
 on:
   workflow_run:
     workflows: ["NPM Test Suites Execution"]
-    branches: [main]
+    branches: [release]
     types: [completed]
 
 permissions:
