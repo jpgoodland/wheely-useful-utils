@@ -3,7 +3,7 @@ name: App Container ECS Deployment
 on:
   workflow_run:
     workflows: ["Terraform Infrastructure"]
-    branches: [main]
+    branches: [release]
     types: [completed]
 
 jobs:
