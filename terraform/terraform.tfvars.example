@@ -1,0 +1,19 @@
+# Example Terraform variables file
+# Copy this file to `terraform.tfvars` and customize with your deployment values.
+# `terraform.tfvars` is ignored by git to protect credentials and infrastructure details.
+
+aws_region = "us-west-2"
+app_name   = "wheel-app"
+image_tag  = "latest"
+
+task_cpu    = 256
+task_memory = 512
+
+desired_count = 1
+
+dynamodb_read_capacity  = 5
+dynamodb_write_capacity = 5
+
+# Custom domain configuration (optional)
+# domain         = "wheel-app.example.com"
+# hosted_zone_id = "Z0123456789EXAMPLE"

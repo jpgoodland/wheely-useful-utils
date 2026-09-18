@@ -1,0 +1,47 @@
+name: App Container ECS Deployment
+
+on:
+  workflow_run:
+    workflows: ["Terraform Infrastructure"]
+    branches: [main]
+    types: [completed]
+
+jobs:
+  deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    # Only run if the Terraform workflow succeeded
+    if: github.event.workflow_run.conclusion == 'success'
+    
+    env:
+      AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
+      ECR_REPOSITORY: wheel-app
+      ECS_CLUSTER: wheel-app
+      ECS_SERVICE: wheel-app
+    
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v5
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ vars.AWS_DEFAULT_REGION }}
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+
+    - name: Build, tag, and push image to Amazon ECR
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: latest
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+    - name: Force new deployment of ECS service
+      run: |
+        aws ecs update-service --cluster $ECS_CLUSTER --service $ECS_SERVICE --force-new-deployment

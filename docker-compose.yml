@@ -1,0 +1,47 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - AWS_REGION=us-west-2
+      - AWS_ACCESS_KEY_ID=fakeMyKeyId
+      - AWS_SECRET_ACCESS_KEY=fakeSecretAccessKey
+      - DYNAMODB_ENDPOINT=http://dynamodb-local:8000
+      - JWT_SECRET=super_secret_local_key_for_jwt
+      - OAUTH_GOOGLE_CLIENT_ID=
+      - OAUTH_GOOGLE_CLIENT_SECRET=
+      - OAUTH_MICROSOFT_CLIENT_ID=
+      - OAUTH_MICROSOFT_CLIENT_SECRET=
+      - OAUTH_GITHUB_CLIENT_ID=
+      - OAUTH_GITHUB_CLIENT_SECRET=
+    depends_on:
+      init-db:
+        condition: service_completed_successfully
+
+  init-db:
+    image: "node:24-alpine"
+    working_dir: /app
+    volumes:
+      - ./scripts:/app/scripts
+      - ./node_modules:/app/node_modules
+    environment:
+      - AWS_REGION=us-west-2
+      - AWS_ACCESS_KEY_ID=fakeMyKeyId
+      - AWS_SECRET_ACCESS_KEY=fakeSecretAccessKey
+      - DYNAMODB_ENDPOINT=http://dynamodb-local:8000
+    entrypoint: ["sh", "-c", "sleep 3 && node scripts/init-db.mjs"]
+    depends_on:
+      - dynamodb-local
+
+  dynamodb-local:
+    command: "-jar DynamoDBLocal.jar -sharedDb -inMemory"
+    image: "amazon/dynamodb-local:latest"
+    container_name: dynamodb-local
+    ports:
+      - "8000:8000"
+    working_dir: /home/dynamodblocal
+

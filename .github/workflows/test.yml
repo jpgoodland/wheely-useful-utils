@@ -1,0 +1,25 @@
+name: NPM Test Suites Execution
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v5
+    
+    - name: Use Node.js 24.x
+      uses: actions/setup-node@v5
+      with:
+        node-version: '24.x'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run tests
+      run: npm test

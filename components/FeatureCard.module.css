@@ -1,0 +1,115 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.75rem;
+  border-radius: 20px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--glass-glow);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-radius: 20px 20px 0 0;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 60px rgba(59, 130, 246, 0.25);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.card.comingSoon {
+  opacity: 0.65;
+  cursor: default;
+}
+
+.card.comingSoon:hover {
+  transform: none;
+  box-shadow: var(--glass-glow);
+  border-color: var(--glass-border);
+}
+
+.iconWrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.name {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.description {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  margin: 0;
+  flex: 1;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  border-radius: 6px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  align-self: flex-start;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.arrow {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: color 0.2s, gap 0.2s;
+}
+
+.card:hover .arrow {
+  color: var(--text-main);
+  gap: 0.6rem;
+}
+
+.card.comingSoon .arrow {
+  display: none;
+}
